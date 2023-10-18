@@ -1,6 +1,6 @@
 {
   "name": "koishi-plugin-henrik-valorant",
-  "description": "外服瓦洛兰特查询工具(外服)",
+  "description": "外服瓦洛兰特战绩查询工具",
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -8,12 +8,21 @@
     "lib",
     "dist"
   ],
+  "contributors": [
+    "ericlam <tsukiko852@gmail.com>"
+  ],
+  "homepage": "https://ericlamm.xyz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://https://github.com/eric2788/koishi-plugin-henrik-valorant.git"
+  },
   "license": "MIT",
   "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "valorant"
   ],
   "peerDependencies": {
     "koishi": "^4.15.0"
