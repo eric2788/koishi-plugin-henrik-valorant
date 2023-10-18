@@ -1,4 +1,3 @@
-/// <reference path="./custom.d.ts" />
 // tslint:disable
 /**
  * 
@@ -13,9 +12,8 @@
  */
 
 import * as url from "url";
-import * as isomorphicFetch from "isomorphic-fetch";
 import { Configuration } from "./configuration";
-import axios, { AxiosResponse } from 'axios'
+import isomorphicFetch, { Response } from 'node-fetch'
 
 const BASE_PATH = "https://api.henrikdev.xyz".replace(/\/+$/, "");
 
@@ -36,7 +34,7 @@ export const COLLECTION_FORMATS = {
  * @interface FetchAPI
  */
 export interface FetchAPI {
-    (url: string, init?: any): Promise<AxiosResponse>;
+    (url: string, init?: any): Promise<Response>
 }
 
 /**
@@ -57,7 +55,7 @@ export interface FetchArgs {
 export class BaseAPI {
     protected configuration: Configuration;
 
-    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected fetch: FetchAPI = axios.get) {
+    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected fetch: FetchAPI = isomorphicFetch) {
         if (configuration) {
             this.configuration = configuration;
             this.basePath = configuration.basePath || this.basePath;
@@ -2857,7 +2855,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -2876,7 +2874,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -2899,7 +2897,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -2920,7 +2918,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -2939,7 +2937,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -2958,7 +2956,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -2976,7 +2974,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -2994,7 +2992,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.blob();
                     } else {
                         throw response;
                     }
@@ -3013,7 +3011,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3035,11 +3033,11 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
-                });
+                }).then((body) => body as V1leaderboard);
             };
         },
         /**
@@ -3059,7 +3057,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3081,7 +3079,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3101,7 +3099,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3121,7 +3119,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3138,7 +3136,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3158,7 +3156,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3177,7 +3175,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3195,7 +3193,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3216,7 +3214,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3234,7 +3232,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3252,7 +3250,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3270,7 +3268,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3289,7 +3287,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3308,7 +3306,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3326,7 +3324,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3339,7 +3337,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        valorantV1RawPost(body: any, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<AxiosResponse> {
+        valorantV1RawPost(body: any, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
             const localVarFetchArgs = DefaultApiFetchParamCreator(configuration).valorantV1RawPost(body, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -3362,7 +3360,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3379,7 +3377,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3396,7 +3394,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3413,7 +3411,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3430,7 +3428,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3450,7 +3448,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3472,7 +3470,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3490,7 +3488,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3511,7 +3509,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3528,7 +3526,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3545,7 +3543,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3567,7 +3565,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -3587,7 +3585,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.data.json();
+                        return response.json();
                     } else {
                         throw response;
                     }
