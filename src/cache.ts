@@ -8,8 +8,15 @@ export class Cache<K extends keyof Tables, T extends Tables[K]> {
         public readonly tableName: K
     ) {}
 
-    get(id: string): Promise<T> {
+    get(id: string): Promise<T | undefined> {
         return this.ctx.cache.get(this.tableName, id)
+    }
+
+    async findByValue(value: T): Promise<string | undefined> {
+        for await(const [id, v] of this.ctx.cache.entries(this.tableName)) {
+            if (v === value) return id
+        }
+        return undefined
     }
 
     set(id: string, value: T): Promise<void> {

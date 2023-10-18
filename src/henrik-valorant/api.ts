@@ -82,12 +82,12 @@ export class RequiredError extends Error {
  * @enum {string}
  */
 export enum Affinities {
-    Eu = <any> 'eu',
-    Na = <any> 'na',
-    Latam = <any> 'latam',
-    Br = <any> 'br',
-    Ap = <any> 'ap',
-    Kr = <any> 'kr'
+    Eu = 'eu',
+    Na = 'na',
+    Latam = 'latam',
+    Br = 'br',
+    Ap = 'ap',
+    Kr = 'kr'
 }
 /**
  * 
@@ -1517,7 +1517,9 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1550,7 +1552,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1604,7 +1607,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1648,7 +1652,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1682,7 +1687,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1716,7 +1722,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1743,7 +1750,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1770,7 +1778,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1802,7 +1811,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1850,7 +1860,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1910,7 +1921,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1960,7 +1972,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2000,7 +2013,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2040,7 +2054,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2062,7 +2077,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2102,7 +2118,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2136,7 +2153,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2164,7 +2182,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2206,7 +2225,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2234,7 +2254,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2262,7 +2283,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2290,7 +2312,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2324,7 +2347,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2358,7 +2382,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2386,7 +2411,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2415,7 +2441,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
             const needsSerialization = (<any>"any" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
             localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
@@ -2445,7 +2472,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2467,7 +2495,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2489,7 +2518,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2511,7 +2541,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2533,7 +2564,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2572,7 +2604,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2620,7 +2653,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2648,7 +2682,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2693,7 +2728,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2715,7 +2751,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2737,7 +2774,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2786,7 +2824,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2826,7 +2865,8 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers, configuration.apiKey ? { Authorization: configuration.apiKey} : {});
+            console.debug('with header:', localVarRequestOptions.headers)
 
             return {
                 url: url.format(localVarUrlObj),
