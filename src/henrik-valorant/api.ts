@@ -882,7 +882,7 @@ export interface V1LifetimeMmrHistoryItem {
      * @type {string}
      * @memberof V1LifetimeMmrHistoryItem
      */
-    matchId?: string;
+    match_id?: string;
     /**
      * 
      * @type {any}
@@ -906,13 +906,13 @@ export interface V1LifetimeMmrHistoryItem {
      * @type {number}
      * @memberof V1LifetimeMmrHistoryItem
      */
-    rankingInTier?: number;
+    ranking_in_tier?: number;
     /**
      * 
      * @type {number}
      * @memberof V1LifetimeMmrHistoryItem
      */
-    lastMmrChange?: number;
+    last_mmr_change?: number;
     /**
      * 
      * @type {number}

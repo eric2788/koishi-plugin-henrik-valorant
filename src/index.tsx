@@ -1,6 +1,7 @@
 import { Context, Schema, Session, Command } from 'koishi'
 import { Affinities, Configuration, DefaultApiFactory } from './henrik-valorant'
 import { Cache } from './cache'
+import { Response } from 'node-fetch'
 import { getDefuseCount, getPlantCount, calculateHeadShotPercentage, displayTeamScores, parseNameTag, regionName, displayPageFeed } from './utils'
 
 export const using = ['cache']
@@ -14,7 +15,7 @@ export interface Config {
 }
 
 export const Config: Schema<Config> = Schema.object({
-  api: Schema.string().default('https://api.henrikdev.xyz/').description('默认API地址，国内可改用cf-worker地址加快存取'),
+  api: Schema.string().default('https://api.henrikdev.xyz').description('默认API地址，国内可改用cf-worker地址加快存取'),
   token: Schema
     .string()
     .description('Henrik API 令牌，使用后可增加每分钟请求次数，详情: https://github.com/Henrik-3/unofficial-valorant-api#authentication-and-rate-limits')
@@ -42,8 +43,12 @@ async function query<T extends { status?: number }>(session: Session<never, neve
     }
     await session.send(`查询失败: ${res.status}`)
   } catch (err) {
+    if (err instanceof Response) {
+      await session.send(`查询失败:  ${await err.text()} (${err.url})`)
+      return undefined;
+    }
     console.error(err)
-    await session.send(`查询失败: ${err?.message ?? err}`)
+    await session.send(`查询失败: ${err}`)
   }
   return undefined;
 }
@@ -88,8 +93,9 @@ export function apply(ctx: Context, config: Config) {
     .option('force', '-f [force]', { fallback: false })
     .action(async ({ session, options }, nametag) => {
       const [name, tag] = parseNameTag(nametag)
-      const { data } = await query(session, api.valorantV1AccountNameTagGet(name, tag, options.force))
-      if (!data) return
+      const res = await query(session, api.valorantV1AccountNameTagGet(name, tag, options.force))
+      if (!res) return
+      const { data } = res;
       await session.send(<>
         <image url={data.card.small} />
         <p>名称: {data.name}#{data.tag}</p>
@@ -110,8 +116,10 @@ export function apply(ctx: Context, config: Config) {
 
       const [name, tag] = parseNameTag(nametag)
 
-      const { data, results } = await query(session, api.valorantV1LifetimeMatchesAffinityNameTagGet(options.region, name, tag, options.mode, options.map, options.page, options.size))
-      if (!data) return
+      const res = await query(session, api.valorantV1LifetimeMatchesAffinityNameTagGet(options.region, name, tag, options.mode, options.map, options.page, options.size))
+      if (!res) return
+
+      const { data, results } = res;
 
       const shorts = await shortenMatchIds(data.map((match) => match.meta.id))
 
@@ -141,8 +149,10 @@ export function apply(ctx: Context, config: Config) {
     .alias('valmatch', '瓦对战')
     .action(async ({ session }, matchId) => {
       matchId = (await shortIdCache.get(matchId)) ?? matchId
-      const { data: match } = await query(session, api.valorantV2MatchMatchIdGet(matchId))
-      if (!match) return
+      const res = await query(session, api.valorantV2MatchMatchIdGet(matchId))
+      if (!res) return
+
+      const { data: match } = res;
 
       await session.send(<>
         <p>ID: {matchId} </p>
@@ -165,8 +175,10 @@ export function apply(ctx: Context, config: Config) {
 
       matchId = (await shortIdCache.get(matchId)) ?? matchId
 
-      const { data } = await query(session, api.valorantV2MatchMatchIdGet(matchId))
-      if (!data) return
+      const res = await query(session, api.valorantV2MatchMatchIdGet(matchId))
+      if (!res) return
+
+      const { data } = res;
 
       await session.send(<>
         <p>对战 {matchId} 的排行榜:</p>
@@ -196,8 +208,10 @@ export function apply(ctx: Context, config: Config) {
 
       const [name, tag] = parseNameTag(nametag)
 
-      const { data } = await query(session, api.valorantV1MmrAffinityNameTagGet(name, tag, options.region))
-      if (!data) return
+      const res = await query(session, api.valorantV1MmrAffinityNameTagGet(name, tag, options.region))
+      if (!res) return
+
+      const { data } = res;
 
       await session.send(<>
         <p>玩家 {data.name}#{data.tag} 的段位信息:</p>
@@ -220,20 +234,22 @@ export function apply(ctx: Context, config: Config) {
 
       const [name, tag] = parseNameTag(nametag)
 
-      const { data, results } = await query(session, api.valorantV1LifetimeMmrHistoryAffinityNameTagGet(options.region, name, tag, options.page, options.size))
-      if (!data) return
+      const res = await query(session, api.valorantV1LifetimeMmrHistoryAffinityNameTagGet(options.region, name, tag, options.page, options.size))
+      if (!res) return
 
-      const shorts = await shortenMatchIds(data.map((history) => history.matchId))
+      const { data, results } = res;
+
+      const shorts = await shortenMatchIds(data.map((history) => history.match_id))
 
       await session.send(<>
         <p>玩家 {name}#{tag} 的段位变化历史:</p>
         <p>----------------</p>
         {data.map((history) => (<>
           <p>日期: {new Date(history.date).toLocaleString()}</p>
-          <p>段位: {history.tier.name} (</p>
-          <p>对战ID: {history.matchId} {shorts[history.matchId] ? <span>(短号: {shorts[history.matchId]})</span> : <></>}</p>
+          <p>段位: {history.tier.name} </p>
+          <p>对战ID: {history.match_id} {shorts[history.match_id] ? <span>(短号: {shorts[history.match_id]})</span> : <></>}</p>
           <p>地图: {history.map.name}</p>
-          <p>分数变更: {history.lastMmrChange}</p>
+          <p>分数变更: {history.last_mmr_change < 0 ? '' : '+'}{history.last_mmr_change}</p>
           <p>----------------</p>
         </>))}
         <p></p>
