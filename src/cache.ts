@@ -1,6 +1,5 @@
 import { Tables } from '@koishijs/cache'
 import { Context } from 'koishi'
-import { V1LifetimeMatchesItem } from './henrik-valorant'
 
 export class Cache<K extends keyof Tables, T extends Tables[K]> {
     constructor(
