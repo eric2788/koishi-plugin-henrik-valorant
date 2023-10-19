@@ -70,18 +70,25 @@ export function apply(ctx: Context, config: Config) {
   httpConfig.apiKey = config.token;
   const api = DefaultApiFactory(httpConfig, undefined, config.api)
   const shortIdCache = new Cache(ctx, 'valorant-short-id')
+  const longIdCache = new Cache(ctx, 'valorant-long-id')
+  const idSeqCache = new Cache(ctx, 'valorant-id-seq')
 
 
   async function shortenMatchIds(longIds: string[]): Promise<{ [key: string]: string }> {
     const ids: { [key: string]: string } = {}
     for (const i of longIds) {
       if (!i) continue
-      const id = await shortIdCache.findByValue(i)
+      const id = await longIdCache.get(i)
       if (id) {
         ids[i] = id
       } else {
-        const newShortId = (await shortIdCache.size()) + 1
-        await shortIdCache.set(newShortId.toString(), i)
+        const lastSeq = await idSeqCache.get('last_seq')
+        const newShortId = (lastSeq ?? 0) + 1;
+        await Promise.all([
+          shortIdCache.set(newShortId.toString(), i),
+          longIdCache.set(i, newShortId.toString()),
+          idSeqCache.set('last_seq', newShortId)
+        ])
         ids[i] = newShortId.toString()
       }
     }

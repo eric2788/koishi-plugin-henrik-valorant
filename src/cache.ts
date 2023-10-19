@@ -42,6 +42,8 @@ export class Cache<K extends keyof Tables, T extends Tables[K]> {
 
 declare module '@koishijs/cache' {
     interface Tables {
-        'valorant-short-id': string,
+        'valorant-short-id': string, // short id -> long id
+        'valorant-long-id': string, // long id -> short id
+        'valorant-id-seq': number, // id sequence
     }
 }

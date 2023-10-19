@@ -8,7 +8,6 @@ export function displayTeamScores(teams: any): string {
 }
 
 export function calculateHeadShotPercentage(shots: any, head = 'head', body = 'body', legs = 'leg'): number {
-    console.debug(shots, head, body, legs)
     const total = shots[head] + shots[body] + shots[legs]
     return Math.round((shots[head] / total) * 100)
 }
