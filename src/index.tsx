@@ -2,7 +2,7 @@ import { Context, Schema, Session, Command } from 'koishi'
 import { Affinities, Configuration, DefaultApiFactory } from './henrik-valorant'
 import { Cache } from './cache'
 import { Response } from 'node-fetch'
-import { getDefuseCount, getPlantCount, calculateHeadShotPercentage, displayTeamScores, parseNameTag, regionName, displayPageFeed } from './utils'
+import { getDefuseCount, getPlantCount, calculateHeadShotPercentage, displayTeamScores, parseNameTag, regionName, displayPageFeed, parseShortId } from './utils'
 
 export const using = ['cache']
 export const name = 'henrik-valorant'
@@ -43,12 +43,19 @@ async function query<T extends { status?: number }>(session: Session<never, neve
     }
     await session.send(`查询失败: ${res.status}`)
   } catch (err) {
-    if (err instanceof Response) {
-      await session.send(`查询失败:  ${await err.text()} (${err.url})`)
-      return undefined;
-    }
     console.error(err)
-    await session.send(`查询失败: ${err}`)
+    let message;
+    if (err instanceof Response) {
+      // henrik api error
+      const errResponse: any = await err.json()
+      if ('errors' in errResponse) {
+        message = (errResponse.errors as any[]).map((e) => e.message).join('\n')
+      } else {
+        message = `${JSON.stringify(errResponse)} (${err.url})`
+      }
+      
+    }
+    await session.send(`查询失败: ${message} ${err.status ? `(${err.status})` : ''}`)
   }
   return undefined;
 }
@@ -153,7 +160,13 @@ export function apply(ctx: Context, config: Config) {
   ctx.command('valorant.match <match-id>', '查看这场比赛的信息', cmdConfig)
     .alias('valmatch', '瓦对战')
     .action(async ({ session }, matchId) => {
-      matchId = (await shortIdCache.get(matchId)) ?? matchId
+
+      matchId = await parseShortId(matchId, shortIdCache)
+      if (!matchId) {
+        await session.send('找不到此短号相对应的对战ID')
+        return
+      }
+
       const res = await query(session, api.valorantV2MatchMatchIdGet(matchId))
       if (!res) return
 
@@ -178,7 +191,11 @@ export function apply(ctx: Context, config: Config) {
     .alias('vallb', '瓦排行')
     .action(async ({ session }, matchId) => {
 
-      matchId = (await shortIdCache.get(matchId)) ?? matchId
+      matchId = await parseShortId(matchId, shortIdCache)
+      if (!matchId) {
+        await session.send('找不到此短号相对应的对战ID')
+        return
+      }
 
       const res = await query(session, api.valorantV2MatchMatchIdGet(matchId))
       if (!res) return

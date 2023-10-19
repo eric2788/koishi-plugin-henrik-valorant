@@ -1,4 +1,5 @@
 import { Affinities } from "./henrik-valorant"
+import { Cache } from "./cache"
 
 
 export function displayTeamScores(teams: any): string {
@@ -21,6 +22,14 @@ export function getPlantCount(match: any, user: string): number {
         }
     }
     return counts
+}
+
+export async function parseShortId(id: string, cache: Cache<'valorant-short-id', string>): Promise<string | undefined> {
+    // is UUID format
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+        return id
+    }
+    return await cache.get(id)
 }
 
 export function displayPageFeed(results: any, page: number): string {
