@@ -19,6 +19,7 @@ export const Config: Schema<Config> = Schema.object({
   token: Schema
     .string()
     .description('Henrik API 令牌，使用后可增加每分钟请求次数，详情: https://github.com/Henrik-3/unofficial-valorant-api#authentication-and-rate-limits')
+    .role('secret')
     .default(''),
   region: Schema
     .union([
@@ -43,17 +44,19 @@ async function query<T extends { status?: number }>(session: Session<never, neve
     }
     await session.send(`查询失败: ${res.status}`)
   } catch (err) {
-    console.error(err)
-    let message;
+    
+    let message = undefined
+    // henrik api error
     if (err instanceof Response) {
-      // henrik api error
       const errResponse: any = await err.json()
+      console.error(errResponse)
       if ('errors' in errResponse) {
         message = (errResponse.errors as any[]).map((e) => e.message).join('\n')
       } else {
         message = `${JSON.stringify(errResponse)} (${err.url})`
       }
-      
+    } else {
+      console.error(err)
     }
     await session.send(`查询失败: ${message} ${err.status ? `(${err.status})` : ''}`)
   }
@@ -149,7 +152,7 @@ export function apply(ctx: Context, config: Config) {
           <p>K/D/A: {match.stats.kills} / {match.stats.deaths} / {match.stats.assists}</p>
           {match.meta.mode === 'Deathmatch' ? <></> : <p>爆头率: {calculateHeadShotPercentage(match.stats.shots)}%</p>}
           <p>开始时间: {new Date(match.meta.started_at).toLocaleString()}</p>
-          <p>服务器: {match.meta.cluster}</p>
+          <p>服务器: {match.meta.cluster} ({regionName(match.meta.region)})</p>
           <p>----------------</p>
         </>))}
         <p></p>
@@ -182,7 +185,7 @@ export function apply(ctx: Context, config: Config) {
         <p>开始时间: {new Date(match.metadata.game_start * 1000).toLocaleString()}</p>
         <p>总时长: {Math.round(match.metadata.game_length / 60)} 分钟</p>
         <p>总回合: {match.metadata.rounds_played}</p>
-        <p>服务器: {match.metadata.cluster} ({match.metadata.region})</p>
+        <p>服务器: {match.metadata.cluster} ({regionName(match.metadata.region)})</p>
       </>)
 
     })
