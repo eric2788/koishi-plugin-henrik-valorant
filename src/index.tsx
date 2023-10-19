@@ -123,8 +123,6 @@ export function apply(ctx: Context, config: Config) {
 
       const shorts = await shortenMatchIds(data.map((match) => match.meta.id))
 
-      console.log(shorts)
-
       await session.send(<>
         <p>玩家 {name}#{tag} 最近的对战记录:</p>
         <p>----------------</p>
