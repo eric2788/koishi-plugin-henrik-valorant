@@ -1,7 +1,7 @@
 import { Context, Schema, Session, Command } from 'koishi'
 import { Affinities, Configuration, DefaultApiFactory } from './henrik-valorant'
 import { Cache } from './cache'
-import { getDefuseCount, getPlantCount, calculateHeadShotPercentage, displayTeamScores, parseNameTag, regionName } from './utils'
+import { getDefuseCount, getPlantCount, calculateHeadShotPercentage, displayTeamScores, parseNameTag, regionName, displayPageFeed } from './utils'
 
 export const using = ['cache']
 export const name = 'henrik-valorant'
@@ -67,9 +67,10 @@ export function apply(ctx: Context, config: Config) {
   const shortIdCache = new Cache(ctx, 'valorant-short-id')
 
 
-  async function shortenMatchIds(longIds: string[]): Promise<{[key: string]: string}> {
+  async function shortenMatchIds(longIds: string[]): Promise<{ [key: string]: string }> {
     const ids: { [key: string]: string } = {}
     for (const i of longIds) {
+      if (!i) continue
       const id = await shortIdCache.findByValue(i)
       if (id) {
         ids[i] = id
@@ -109,7 +110,7 @@ export function apply(ctx: Context, config: Config) {
 
       const [name, tag] = parseNameTag(nametag)
 
-      const { data } = await query(session, api.valorantV1LifetimeMatchesAffinityNameTagGet(options.region, name, tag, options.mode, options.map, options.page, options.size))
+      const { data, results } = await query(session, api.valorantV1LifetimeMatchesAffinityNameTagGet(options.region, name, tag, options.mode, options.map, options.page, options.size))
       if (!data) return
 
       const shorts = await shortenMatchIds(data.map((match) => match.meta.id))
@@ -124,20 +125,22 @@ export function apply(ctx: Context, config: Config) {
           <p>模式: {match.meta.mode}</p>
           <p>地图: {match.meta.map.name}</p>
           <p>使用角色: {match.stats.character.name}</p>
-          { match.meta.mode === 'Deathmatch' ? <></> : <p>比分: {displayTeamScores(match.teams)} (用户所在队伍: {match.stats.team})</p>}
+          {match.meta.mode === 'Deathmatch' ? <></> : <p>比分: {displayTeamScores(match.teams)} (用户所在队伍: {match.stats.team})</p>}
           <p>K/D/A: {match.stats.kills} / {match.stats.deaths} / {match.stats.assists}</p>
-          { match.meta.mode === 'Deathmatch' ? <></> : <p>爆头率: {calculateHeadShotPercentage(match.stats.shots)}%</p>}
+          {match.meta.mode === 'Deathmatch' ? <></> : <p>爆头率: {calculateHeadShotPercentage(match.stats.shots)}%</p>}
           <p>开始时间: {new Date(match.meta.started_at).toLocaleString()}</p>
           <p>服务器: {match.meta.cluster}</p>
           <p>----------------</p>
         </>))}
+        <p></p>
+        <p>{displayPageFeed(results, options.page)}</p>
       </>)
     })
 
   ctx.command('valorant.match <match-id>', '查看这场比赛的信息', cmdConfig)
     .alias('valmatch', '瓦对战')
     .action(async ({ session }, matchId) => {
-      matchId = ( await shortIdCache.get(matchId) ) ?? matchId
+      matchId = (await shortIdCache.get(matchId)) ?? matchId
       const { data: match } = await query(session, api.valorantV2MatchMatchIdGet(matchId))
       if (!match) return
 
@@ -145,6 +148,9 @@ export function apply(ctx: Context, config: Config) {
         <p>ID: {matchId} </p>
         <p>模式: {match.metadata.mode}</p>
         <p>地图: {match.metadata.map}</p>
+        {match.metadata.mode_id === "deathmatch" ?
+          <></> :
+          <p>比分: {match.teams.red.has_won ? '(胜利)' : ''} Red {match.teams.red.rounds_won} : {match.teams.red.rounds_won} Blue {match.teams.blue.has_won ? '(胜利)' : ''}</p>}
         <p>开始时间: {new Date(match.metadata.game_start * 1000).toLocaleString()}</p>
         <p>总时长: {Math.round(match.metadata.game_length / 60)} 分钟</p>
         <p>总回合: {match.metadata.rounds_played}</p>
@@ -157,7 +163,7 @@ export function apply(ctx: Context, config: Config) {
     .alias('vallb', '瓦排行')
     .action(async ({ session }, matchId) => {
 
-      matchId = ( await shortIdCache.get(matchId) ) ?? matchId
+      matchId = (await shortIdCache.get(matchId)) ?? matchId
 
       const { data } = await query(session, api.valorantV2MatchMatchIdGet(matchId))
       if (!data) return
@@ -170,6 +176,7 @@ export function apply(ctx: Context, config: Config) {
           .map((player, i) => (<>
             <p>{i + 1}. {player.name}#{player.tag} ({player.character})</p>
             {data.metadata.mode_id === 'competitive' ? <p>段位: {player.currenttier_patched}</p> : <></>}
+            {data.metadata.mode_id === 'deathmatch' ? <></> : <p>队伍: {player.team}</p>}
             <p>均分: {player.stats.score}</p>
             <p>K/D/A: {player.stats.kills} / {player.stats.deaths} / {player.stats.assists}</p>
             <p>爆头率: {calculateHeadShotPercentage(player.stats, 'headshots', 'bodyshots', 'legshots')}%</p>
@@ -182,26 +189,56 @@ export function apply(ctx: Context, config: Config) {
     })
 
 
-    ctx.command('valorant.mmr <nametag>', '查询 Valorant 玩家的段位', cmdConfig)
-      .alias('valmmr', '瓦段位')
-      .option('region', '-r [region] 指定地区, 如无则使用预设', { fallback: config.region })
-      .action(async ({ session, options }, nametag) => {
+  ctx.command('valorant.mmr <nametag>', '查询 Valorant 玩家的段位', cmdConfig)
+    .alias('valmmr', '瓦段位')
+    .option('region', '-r [region] 指定地区, 如无则使用预设', { fallback: config.region })
+    .action(async ({ session, options }, nametag) => {
 
-        const [name, tag] = parseNameTag(nametag)
+      const [name, tag] = parseNameTag(nametag)
 
-        const { data } = await query(session, api.valorantV1MmrAffinityNameTagGet(name, tag, options.region))
-        if (!data) return
+      const { data } = await query(session, api.valorantV1MmrAffinityNameTagGet(name, tag, options.region))
+      if (!data) return
 
-        await session.send(<>
-          <p>玩家 {data.name}#{data.tag} 的段位信息:</p>
+      await session.send(<>
+        <p>玩家 {data.name}#{data.tag} 的段位信息:</p>
+        <p>----------------</p>
+        <p>目前段位: {data.currenttierpatched}</p>
+        <p>目前段位分数: {data.ranking_in_tier}/100</p>
+        <p>上一次的分数变更: {data.mmr_change_to_last_game < 0 ? '' : '+'}{data.mmr_change_to_last_game}</p>
+        <p>ELO: {data.elo}</p>
+        <p>----------------</p>
+        <image url={data.images.large}></image>
+      </>)
+    })
+
+  ctx.command('valorant.mmrhistory <nametag>', '查询 Valorant 玩家的段位变化历史', cmdConfig)
+    .alias('valmmrh', '瓦段位历史')
+    .option('region', '-r [region] 指定地区, 如无则使用预设', { fallback: config.region })
+    .option('page', '-p [page] 指定页数', { fallback: 1 })
+    .option('size', '-s [size] 指定每页数量', { fallback: 10 })
+    .action(async ({ session, options }, nametag) => {
+
+      const [name, tag] = parseNameTag(nametag)
+
+      const { data, results } = await query(session, api.valorantV1LifetimeMmrHistoryAffinityNameTagGet(options.region, name, tag, options.page, options.size))
+      if (!data) return
+
+      const shorts = await shortenMatchIds(data.map((history) => history.matchId))
+
+      await session.send(<>
+        <p>玩家 {name}#{tag} 的段位变化历史:</p>
+        <p>----------------</p>
+        {data.map((history) => (<>
+          <p>日期: {new Date(history.date).toLocaleString()}</p>
+          <p>段位: {history.tier.name} (</p>
+          <p>对战ID: {history.matchId} {shorts[history.matchId] ? <span>(短号: {shorts[history.matchId]})</span> : <></>}</p>
+          <p>地图: {history.map.name}</p>
+          <p>分数变更: {history.lastMmrChange}</p>
           <p>----------------</p>
-          <p>目前段位: {data.currenttierpatched}</p>
-          <p>目前段位分数: {data.ranking_in_tier}/100</p>
-          <p>上一次的分数变更: {data.mmr_change_to_last_game < 0 ? '' : '+'}{data.mmr_change_to_last_game}</p>
-          <p>ELO: {data.elo}</p>
-          <p>----------------</p>
-          <image url={data.images.large}></image>
-          </>)
-      })
-
-}
+        </>))}
+        <p></p>
+        <p>{displayPageFeed(results, options.page)}</p>
+      </>)
+    
+    })
+  }

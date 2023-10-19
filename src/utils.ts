@@ -24,6 +24,9 @@ export function getPlantCount(match: any, user: string): number {
     return counts
 }
 
+export function displayPageFeed(results: any, page: number): string {
+    return `第 ${page} / ${Math.ceil(results.total / results.returned)} 页，共 ${results.total} 条结果`
+}
 
 export function getDefuseCount(match: any, user: string): number {
     let counts = 0
