@@ -15,7 +15,7 @@ export interface Config {
 }
 
 export const Config: Schema<Config> = Schema.object({
-  api: Schema.string().default('https://api.henrikdev.xyz').description('默认API地址，国内可改用cf-worker地址加快存取，如: https://henrik.ericlamm.workers.dev'),
+  api: Schema.string().default('https://api.henrikdev.xyz').description('默认API地址'),
   token: Schema
     .string()
     .description('Henrik API 令牌，使用后可增加每分钟请求次数，详情: https://github.com/Henrik-3/unofficial-valorant-api#authentication-and-rate-limits')
