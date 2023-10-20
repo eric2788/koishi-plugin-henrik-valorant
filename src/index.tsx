@@ -114,29 +114,13 @@ export function apply(ctx: Context, config: Config) {
       if (!res) return
       const { data } = res;
 
-      const message = h('div', {},
-        [
-          h('div', {}, h('p', {}, '---'), h.image(data.card.small), h('p', {}, '\n'))
-        ],
-        h('p', {}, `名称: ${data.name}#${data.tag}`),
-        h('p', {}, `地区: ${regionName(data.region)}`),
-        h('p', {}, `账户等级: ${data.account_level}`),
-        h('p', {}, `API上次更新: ${new Date(data.last_update_raw * 1000)?.toLocaleString() ?? data.last_update}`),
-      )
-
-      await session.send(message)
-
-      /*
       await session.send(<div>
-        <div>
-          <p>{h.image(data.card.small)}</p>
-        </div>
+        <image url={data.card.small} />
         <p>名称: {data.name}#{data.tag}</p>
         <p>地区: {regionName(data.region)}</p>
         <p>账户等级: {data.account_level}</p>
         <p>API上次更新: {new Date(data.last_update_raw * 1000)?.toLocaleString() ?? data.last_update}</p>
       </div>)
-      */
     })
 
   ctx.command('valorant.matches <nametag>', '查询 Valorant 玩家最近的对战记录', cmdConfig)
@@ -222,31 +206,7 @@ export function apply(ctx: Context, config: Config) {
 
       const { data } = res;
 
-      const message = h('div', {},
-        h('h3', {}, `对战 ${matchId} 的排行榜:`),
-        h('p', {}, `----------------`),
-        ...(data.players.all_players as any[])
-          .sort((a, b) => b.stats.score - a.stats.score)
-          .map((player, i) => (
-            h('div', {},
-              h('p', {}, `${i + 1}. ${player.name}#${player.tag} (${player.character})`),
-              data.metadata.mode_id === 'competitive' ? h('p', {}, `段位: ${player.currenttier_patched}`) : h('div', {}),
-              data.metadata.mode_id === 'deathmatch' ? h('div', {}) : h('p', {}, `队伍: ${player.team}`),
-              h('p', {}, `均分: ${player.stats.score}`),
-              h('p', {}, `K/D/A: ${player.stats.kills} / ${player.stats.deaths} / ${player.stats.assists}`),
-              h('p', {}, `爆头率: ${calculateHeadShotPercentage(player.stats, 'headshots', 'bodyshots', 'legshots')}%`),
-              h('p', {}, `装包次数: ${getPlantCount(data, player.puuid)}`),
-              h('p', {}, `拆包次数: ${getDefuseCount(data, player.puuid)}`),
-              [
-                h('div', {}, h('p', {}, '---'), h.image(player.assets.agent.killfeed))
-              ],
-              h('p', {}, `----------------`),
-            ))
-      ))
 
-      await session.send(message)
-
-      /*
       await session.send(<div>
         <p>对战 {matchId} 的排行榜:</p>
         <p>----------------</p>
@@ -261,13 +221,11 @@ export function apply(ctx: Context, config: Config) {
             <p>爆头率: {calculateHeadShotPercentage(player.stats, 'headshots', 'bodyshots', 'legshots')}%</p>
             <p>装包次数: {getPlantCount(data, player.puuid)}</p>
             <p>拆包次数: {getDefuseCount(data, player.puuid)}</p>
-            <div>
-              <p>{h.image(player.assets.agent.killfeed)}</p>
-            </div>
+            <image url={player.assets.agent.killfeed} />
             <p>----------------</p>
           </div>))}
       </div>)
-      */
+
     })
 
 
@@ -283,22 +241,7 @@ export function apply(ctx: Context, config: Config) {
 
       const { data } = res;
 
-      const message = h('div', {},
-        h('p', {}, `玩家 ${data.name}#${data.tag} 的段位信息:`),
-        h('p', {}, `----------------`),
-        h('p', {}, `目前段位: ${data.currenttierpatched}`),
-        h('p', {}, `目前段位分数: ${data.ranking_in_tier}/100`),
-        h('p', {}, `上一次的分数变更: ${data.mmr_change_to_last_game < 0 ? '' : '+'}${data.mmr_change_to_last_game}`),
-        h('p', {}, `ELO: ${data.elo}`),
-        h('p', {}, `----------------`),
-        [
-          h('div', {}, h('p', {}, '---'), h.image(data.images.large))
-        ],
-      )
 
-      await session.send(message)
-
-      /*
       await session.send(<div>
         <p>玩家 {data.name}#{data.tag} 的段位信息:</p>
         <p>----------------</p>
@@ -307,11 +250,8 @@ export function apply(ctx: Context, config: Config) {
         <p>上一次的分数变更: {data.mmr_change_to_last_game < 0 ? '' : '+'}{data.mmr_change_to_last_game}</p>
         <p>ELO: {data.elo}</p>
         <p>----------------</p>
-        <div>
-          <p>{h.image(data.images.large)}</p>
-        </div>
+        <image url={data.images.large} />
       </div>)
-      */
     })
 
   ctx.command('valorant.mmrhistory <nametag>', '查询 Valorant 玩家的段位变化历史', cmdConfig)
