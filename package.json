@@ -4,6 +4,7 @@
   "version": "0.0.2",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "type": "module",
   "files": [
     "lib",
     "dist"
