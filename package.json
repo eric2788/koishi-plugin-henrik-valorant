@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-henrik-valorant",
   "description": "外服瓦洛兰特战绩查询工具",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "commonjs",
@@ -23,7 +23,8 @@
     "chatbot",
     "koishi",
     "plugin",
-    "valorant"
+    "valorant",
+    "gametool"
   ],
   "koishi": {
     "service": {

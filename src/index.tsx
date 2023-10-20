@@ -182,7 +182,7 @@ export function apply(ctx: Context, config: Config) {
         <p>地图: {match.metadata.map}</p>
         {match.metadata.mode_id === "deathmatch" ?
           <></> :
-          <p>比分: {match.teams.red.has_won ? '(胜利)' : ''} Red {match.teams.red.rounds_won} : {match.teams.red.rounds_won} Blue {match.teams.blue.has_won ? '(胜利)' : ''}</p>}
+          <p>比分: {match.teams.red.has_won ? '(胜利)' : ''} Red {match.teams.red.rounds_won} : {match.teams.blue.rounds_won} Blue {match.teams.blue.has_won ? '(胜利)' : ''}</p>}
         <p>开始时间: {new Date(match.metadata.game_start * 1000).toLocaleString()}</p>
         <p>总时长: {Math.round(match.metadata.game_length / 60)} 分钟</p>
         <p>总回合: {match.metadata.rounds_played}</p>
@@ -236,21 +236,25 @@ export function apply(ctx: Context, config: Config) {
 
       const [name, tag] = parseNameTag(nametag)
 
-      const res = await query(session, api.valorantV1MmrAffinityNameTagGet(name, tag, options.region))
+      const res = await query(session, api.valorantV2MmrAffinityNameTagGet(name, tag, options.region))
       if (!res) return
 
-      const { data } = res;
+      const { data: { current_data: data } } = res;
 
+      if (!data || data == null) {
+        await session.send('找不到该玩家的段位信息')
+        return
+      } 
 
       await session.send(<div>
-        <p>玩家 {data.name}#{data.tag} 的段位信息:</p>
+        <p>玩家 {name}#{tag} 的段位信息:</p>
         <p>----------------</p>
         <p>目前段位: {data.currenttierpatched}</p>
         <p>目前段位分数: {data.ranking_in_tier}/100</p>
         <p>上一次的分数变更: {data.mmr_change_to_last_game < 0 ? '' : '+'}{data.mmr_change_to_last_game}</p>
         <p>ELO: {data.elo}</p>
         <p>----------------</p>
-        <image url={data.images.large} />
+        { data.images ? <image url={data.images.large ?? data.images.small} /> : <></>}
       </div>)
     })
 
