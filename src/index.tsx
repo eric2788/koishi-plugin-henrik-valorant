@@ -1,4 +1,4 @@
-import { Context, Schema, Session, Command } from 'koishi'
+import { Context, Schema, Session, Command, h } from 'koishi'
 import { Affinities, Configuration, DefaultApiFactory } from './henrik-valorant'
 import { Cache } from './cache'
 import { Response } from 'node-fetch-commonjs'
@@ -44,7 +44,7 @@ async function query<T extends { status?: number }>(session: Session<never, neve
     }
     await session.send(`查询失败: ${res.status}`)
   } catch (err) {
-    
+
     let message = undefined
     // henrik api error
     if (err instanceof Response) {
@@ -113,13 +113,30 @@ export function apply(ctx: Context, config: Config) {
       const res = await query(session, api.valorantV1AccountNameTagGet(name, tag, options.force))
       if (!res) return
       const { data } = res;
-      await session.send(<>
-        <image url={data.card.small} />
+
+      const message = h('div', {},
+        [
+          h('div', {}, h('p', {}, '---'), h.image(data.card.small), h('p', {}, '\n'))
+        ],
+        h('p', {}, `名称: ${data.name}#${data.tag}`),
+        h('p', {}, `地区: ${regionName(data.region)}`),
+        h('p', {}, `账户等级: ${data.account_level}`),
+        h('p', {}, `API上次更新: ${new Date(data.last_update_raw * 1000)?.toLocaleString() ?? data.last_update}`),
+      )
+
+      await session.send(message)
+
+      /*
+      await session.send(<div>
+        <div>
+          <p>{h.image(data.card.small)}</p>
+        </div>
         <p>名称: {data.name}#{data.tag}</p>
         <p>地区: {regionName(data.region)}</p>
         <p>账户等级: {data.account_level}</p>
         <p>API上次更新: {new Date(data.last_update_raw * 1000)?.toLocaleString() ?? data.last_update}</p>
-      </>)
+      </div>)
+      */
     })
 
   ctx.command('valorant.matches <nametag>', '查询 Valorant 玩家最近的对战记录', cmdConfig)
@@ -140,10 +157,10 @@ export function apply(ctx: Context, config: Config) {
 
       const shorts = await shortenMatchIds(data.map((match) => match.meta.id))
 
-      await session.send(<>
+      await session.send(<div>
         <p>玩家 {name}#{tag} 最近的对战记录:</p>
         <p>----------------</p>
-        {data.map((match) => (<>
+        {data.map((match) => (<div>
           <p>ID: {match.meta.id} {shorts[match.meta.id] ? <span>(短号: {shorts[match.meta.id]})</span> : <></>}</p>
           <p>模式: {match.meta.mode}</p>
           <p>地图: {match.meta.map.name}</p>
@@ -154,10 +171,10 @@ export function apply(ctx: Context, config: Config) {
           <p>开始时间: {new Date(match.meta.started_at).toLocaleString()}</p>
           <p>服务器: {match.meta.cluster} ({regionName(match.meta.region)})</p>
           <p>----------------</p>
-        </>))}
+        </div>))}
         <p></p>
         <p>{displayPageFeed(results, options.page)}</p>
-      </>)
+      </div>)
     })
 
   ctx.command('valorant.match <match-id>', '查看这场比赛的信息', cmdConfig)
@@ -175,7 +192,7 @@ export function apply(ctx: Context, config: Config) {
 
       const { data: match } = res;
 
-      await session.send(<>
+      await session.send(<div>
         <p>ID: {matchId} </p>
         <p>模式: {match.metadata.mode}</p>
         <p>地图: {match.metadata.map}</p>
@@ -186,7 +203,7 @@ export function apply(ctx: Context, config: Config) {
         <p>总时长: {Math.round(match.metadata.game_length / 60)} 分钟</p>
         <p>总回合: {match.metadata.rounds_played}</p>
         <p>服务器: {match.metadata.cluster} ({regionName(match.metadata.region)})</p>
-      </>)
+      </div>)
 
     })
 
@@ -205,12 +222,37 @@ export function apply(ctx: Context, config: Config) {
 
       const { data } = res;
 
-      await session.send(<>
+      const message = h('div', {},
+        h('h3', {}, `对战 ${matchId} 的排行榜:`),
+        h('p', {}, `----------------`),
+        ...(data.players.all_players as any[])
+          .sort((a, b) => b.stats.score - a.stats.score)
+          .map((player, i) => (
+            h('div', {},
+              h('p', {}, `${i + 1}. ${player.name}#${player.tag} (${player.character})`),
+              data.metadata.mode_id === 'competitive' ? h('p', {}, `段位: ${player.currenttier_patched}`) : h('div', {}),
+              data.metadata.mode_id === 'deathmatch' ? h('div', {}) : h('p', {}, `队伍: ${player.team}`),
+              h('p', {}, `均分: ${player.stats.score}`),
+              h('p', {}, `K/D/A: ${player.stats.kills} / ${player.stats.deaths} / ${player.stats.assists}`),
+              h('p', {}, `爆头率: ${calculateHeadShotPercentage(player.stats, 'headshots', 'bodyshots', 'legshots')}%`),
+              h('p', {}, `装包次数: ${getPlantCount(data, player.puuid)}`),
+              h('p', {}, `拆包次数: ${getDefuseCount(data, player.puuid)}`),
+              [
+                h('div', {}, h('p', {}, '---'), h.image(player.assets.agent.killfeed))
+              ],
+              h('p', {}, `----------------`),
+            ))
+      ))
+
+      await session.send(message)
+
+      /*
+      await session.send(<div>
         <p>对战 {matchId} 的排行榜:</p>
         <p>----------------</p>
         {(data.players.all_players as any[])
           .sort((a, b) => b.stats.score - a.stats.score)
-          .map((player, i) => (<>
+          .map((player, i) => (<div>
             <p>{i + 1}. {player.name}#{player.tag} ({player.character})</p>
             {data.metadata.mode_id === 'competitive' ? <p>段位: {player.currenttier_patched}</p> : <></>}
             {data.metadata.mode_id === 'deathmatch' ? <></> : <p>队伍: {player.team}</p>}
@@ -219,10 +261,13 @@ export function apply(ctx: Context, config: Config) {
             <p>爆头率: {calculateHeadShotPercentage(player.stats, 'headshots', 'bodyshots', 'legshots')}%</p>
             <p>装包次数: {getPlantCount(data, player.puuid)}</p>
             <p>拆包次数: {getDefuseCount(data, player.puuid)}</p>
-            <image url={player.assets.agent.killfeed} />
+            <div>
+              <p>{h.image(player.assets.agent.killfeed)}</p>
+            </div>
             <p>----------------</p>
-          </>))}
-      </>)
+          </div>))}
+      </div>)
+      */
     })
 
 
@@ -238,7 +283,23 @@ export function apply(ctx: Context, config: Config) {
 
       const { data } = res;
 
-      await session.send(<>
+      const message = h('div', {},
+        h('p', {}, `玩家 ${data.name}#${data.tag} 的段位信息:`),
+        h('p', {}, `----------------`),
+        h('p', {}, `目前段位: ${data.currenttierpatched}`),
+        h('p', {}, `目前段位分数: ${data.ranking_in_tier}/100`),
+        h('p', {}, `上一次的分数变更: ${data.mmr_change_to_last_game < 0 ? '' : '+'}${data.mmr_change_to_last_game}`),
+        h('p', {}, `ELO: ${data.elo}`),
+        h('p', {}, `----------------`),
+        [
+          h('div', {}, h('p', {}, '---'), h.image(data.images.large))
+        ],
+      )
+
+      await session.send(message)
+
+      /*
+      await session.send(<div>
         <p>玩家 {data.name}#{data.tag} 的段位信息:</p>
         <p>----------------</p>
         <p>目前段位: {data.currenttierpatched}</p>
@@ -246,8 +307,11 @@ export function apply(ctx: Context, config: Config) {
         <p>上一次的分数变更: {data.mmr_change_to_last_game < 0 ? '' : '+'}{data.mmr_change_to_last_game}</p>
         <p>ELO: {data.elo}</p>
         <p>----------------</p>
-        <image url={data.images.large}></image>
-      </>)
+        <div>
+          <p>{h.image(data.images.large)}</p>
+        </div>
+      </div>)
+      */
     })
 
   ctx.command('valorant.mmrhistory <nametag>', '查询 Valorant 玩家的段位变化历史', cmdConfig)
@@ -266,20 +330,20 @@ export function apply(ctx: Context, config: Config) {
 
       const shorts = await shortenMatchIds(data.map((history) => history.match_id))
 
-      await session.send(<>
+      await session.send(<div>
         <p>玩家 {name}#{tag} 的段位变化历史:</p>
         <p>----------------</p>
-        {data.map((history) => (<>
+        {data.map((history) => (<div>
           <p>日期: {new Date(history.date).toLocaleString()}</p>
           <p>段位: {history.tier.name} </p>
           <p>对战ID: {history.match_id} {shorts[history.match_id] ? <span>(短号: {shorts[history.match_id]})</span> : <></>}</p>
           <p>地图: {history.map.name}</p>
           <p>分数变更: {history.last_mmr_change < 0 ? '' : '+'}{history.last_mmr_change}</p>
           <p>----------------</p>
-        </>))}
+        </div>))}
         <p></p>
         <p>{displayPageFeed(results, options.page)}</p>
-      </>)
-    
+      </div>)
+
     })
-  }
+}
