@@ -19,3 +19,12 @@
 作用在于增加每分钟的请求次数量，申请需要到该作者所属的Discord服务器申请Token.
 
 详情(需要自行翻译): https://github.com/Henrik-3/unofficial-valorant-api#authentication-and-rate-limits
+
+
+### API 地址反代
+
+由于该API的服务器在国外，请求速度可能较慢，因此我这边提供了由cloudflare worker生成的反代网址，可以在配置中使用:
+
+```
+https://henrik.ericlamm.workers.dev
+```
