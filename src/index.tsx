@@ -1,7 +1,7 @@
 import { Context, Schema, Session, Command } from 'koishi'
 import { Affinities, Configuration, DefaultApiFactory } from './henrik-valorant'
 import { Cache } from './cache'
-import { Response } from 'node-fetch'
+import { Response } from 'node-fetch-commonjs'
 import { getDefuseCount, getPlantCount, calculateHeadShotPercentage, displayTeamScores, parseNameTag, regionName, displayPageFeed, parseShortId } from './utils'
 
 export const using = ['cache']

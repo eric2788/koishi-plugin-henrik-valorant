@@ -13,7 +13,7 @@
 
 import * as url from "url";
 import { Configuration } from "./configuration";
-import isomorphicFetch, { Response } from 'node-fetch'
+import isomorphicFetch, { Response } from 'node-fetch-commonjs'
 
 const BASE_PATH = "https://api.henrikdev.xyz".replace(/\/+$/, "");
 
