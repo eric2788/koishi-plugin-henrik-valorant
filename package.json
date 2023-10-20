@@ -1,9 +1,10 @@
 {
   "name": "koishi-plugin-henrik-valorant",
   "description": "外服瓦洛兰特战绩查询工具",
-  "version": "0.0.5-alpha.1",
+  "version": "0.0.5-alpha.3",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "type": "commonjs",
   "files": [
     "lib",
     "dist"
