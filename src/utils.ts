@@ -65,3 +65,18 @@ export function regionName(region: `${Affinities}`): string {
         default: return '未知';
     }
 }
+
+export function getFirstKillMap(kills: any[]): { [key: string]: number } {
+    if (!kills || kills.length === 0) return {}
+    const result: { [key: string]: number } = {}
+    let round = 0
+    // json 數據本身已經返回 sorted 的 kill_time_in_match
+    for (const kill of kills) {
+        if (kill.round === round) {
+            const count = result[kill.killer_puuid] ?? 0
+            result[kill.killer_puuid] = count + 1
+            round++
+        }
+    }
+    return result
+}

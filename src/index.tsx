@@ -2,7 +2,7 @@ import { Context, Schema, Session, Command, h } from 'koishi'
 import { Affinities, Configuration, DefaultApiFactory } from './henrik-valorant'
 import { Cache } from './cache'
 import { Response } from 'node-fetch-commonjs'
-import { getDefuseCount, getPlantCount, calculateHeadShotPercentage, displayTeamScores, parseNameTag, regionName, displayPageFeed, parseShortId } from './utils'
+import { getDefuseCount, getPlantCount, calculateHeadShotPercentage, displayTeamScores, parseNameTag, regionName, displayPageFeed, parseShortId, getFirstKillMap } from './utils'
 
 export const using = ['cache']
 export const name = 'henrik-valorant'
@@ -206,6 +206,7 @@ export function apply(ctx: Context, config: Config) {
 
       const { data } = res;
 
+      const fkMap = getFirstKillMap(data.kills)
 
       await session.send(<div>
         <p>对战 {matchId} 的排行榜:</p>
@@ -219,6 +220,7 @@ export function apply(ctx: Context, config: Config) {
             <p>均分: {player.stats.score}</p>
             <p>K/D/A: {player.stats.kills} / {player.stats.deaths} / {player.stats.assists}</p>
             <p>爆头率: {calculateHeadShotPercentage(player.stats, 'headshots', 'bodyshots', 'legshots')}%</p>
+            {data.metadata.mode_id === 'deathmatch' ? <></> : <p>首杀: {fkMap[player.puuid] ?? 0}</p>}
             <p>装包次数: {getPlantCount(data, player.puuid)}</p>
             <p>拆包次数: {getDefuseCount(data, player.puuid)}</p>
             <image url={player.assets.agent.killfeed} />
